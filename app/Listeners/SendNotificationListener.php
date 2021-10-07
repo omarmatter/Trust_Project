@@ -3,13 +3,15 @@
 namespace App\Listeners;
 
 use App\Events\EventNotification;
+use App\Models\setting;
 use App\Models\User;
 use App\Notifications\NewUser;
+use App\Scopes\AdminTypeScope;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Notification;
 
-class SendNotificationListener
+class SendNotificationListener implements ShouldQueue
 {
     /**
      * Create the event listener.
@@ -31,10 +33,13 @@ class SendNotificationListener
      */
     public function handle(EventNotification $event)
     {
+
+
+        if(config('notify')){
         $user = $event->user;
 
-        $users = User::where('roles', '1')->Where('receive_notify', '1')->get();
-
+        $users = User::get();
         Notification::send($users, new NewUser($user));
+        }
     }
 }
