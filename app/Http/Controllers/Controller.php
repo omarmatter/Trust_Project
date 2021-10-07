@@ -12,8 +12,5 @@ class Controller extends BaseController
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
 
-    public function response($data ,$stutas){
-         return response()->json(['data'=>$data],
-          $stutas);
-    }
+   
 }

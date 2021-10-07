@@ -14,15 +14,18 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Validator;
 
-class UserController extends Controller
+class AuthController extends Controller
 {
 
     public function register(UserRequest $request)
     {
 
-         $request->merge(['roles'=>2]);
-         $user=  User::create($request->all());
-         return $this->response($user , 200);
+        $data = $request->validated();
+        $data['roles'] = 2;
+        $user =  User::create($data);
+
+
+        return coustom_response(true, 'success add User', $user);
     }
 
     public function login(Request $request)
@@ -30,26 +33,23 @@ class UserController extends Controller
 
         $user = User::where('email', $request->email)->first();
         if (!$user || !Hash::check($request->password, $user->password)) {
-            return $this->response('Invalid username and password combination' ,401);
-
-        $token = $user->createToken('auth');
-        return $this->response([
-            'token' => $token->plainTextToken,
-            'user' => $user
-        ] ,200);
-
-    }
-}
+            return coustom_response(false,'Invalid username and password combination',401);
+        }
+            $token = $user->createToken('auth');
+            return coustom_response(true,'login Success',['token' => $token->plainTextToken,
+            'user' => $user],200);
+        }
+    
 
 
-    public function logout(Request $request){
-  $user=   Auth::guard('sanctum')->user();
-      $user->currentAccessToken()->delete();
+    public function logout(Request $request)
+    {
+        $user =   Auth::guard('sanctum')->user();
+        $user->currentAccessToken()->delete();
 
         return response()->json([
             'data' => 'Logout successfuley'
 
         ], 200);
     }
-
 }

@@ -12,9 +12,10 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Notification;
 
-class SendNotificationListener implements ShouldQueue
+class SendNotificationListener
+// implements ShouldQueue
 {
-    use Queueable;
+    // use Queueable;
     /**
      * Create the event listener.
      *
@@ -37,14 +38,14 @@ class SendNotificationListener implements ShouldQueue
     {
 
 
+
+
         if(config('notify')){
+
+
      $user= $event->user;
-
-        $users = User::chunk(100, function($users) use ($user) {
+        $users = User::isAdmin()->chunk(100, function($users) use ($user) {
             Notification::send($users, new NewUser($user));
-           
-
-
         });
         }
     }

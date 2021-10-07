@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Scopes\AdminType;
 use App\Scopes\AdminTypeScope;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -14,6 +15,8 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
+    public const admin = 1;
+    public const user = 2;
     /**
      * The attributes that are mass assignable.
      *
@@ -27,9 +30,14 @@ class User extends Authenticatable
          'roles',
         'password',
     ];
-    protected static function booted()
+    // protected static function booted()
+    // {
+    //     static::addGlobalScope(new AdminTypeScope);
+    // }
+
+    public function scopeIsAdmin(Builder $builder)
     {
-        static::addGlobalScope(new AdminTypeScope);
+        $builder->where('roles', '=', '1');
     }
 
     /**
@@ -50,4 +58,6 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+
 }
