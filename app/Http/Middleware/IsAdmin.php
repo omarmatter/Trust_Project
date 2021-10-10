@@ -18,7 +18,7 @@ class IsAdmin
      */
     public function handle(Request $request, Closure $next)
     {
-        if (Auth::user()->roles == User::admin) {
+        if (Auth::user()->roles == User::ADMIN) {
             return $next($request);
         } else {
             return coustom_response(false, 'unAuth', [], 401);

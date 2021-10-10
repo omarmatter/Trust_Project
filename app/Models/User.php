@@ -15,8 +15,8 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
-    public const admin = 1;
-    public const user = 2;
+    public const ADMIN = 1;
+    public const USER = 2;
     /**
      * The attributes that are mass assignable.
      *
@@ -37,7 +37,7 @@ class User extends Authenticatable
 
     public function scopeIsAdmin(Builder $builder)
     {
-        $builder->where('roles', '=', '1');
+        $builder->where('roles', '=', self::ADMIN);
     }
 
     /**

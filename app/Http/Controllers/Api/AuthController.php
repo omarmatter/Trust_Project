@@ -39,7 +39,7 @@ class AuthController extends Controller
             return coustom_response(true,'login Success',['token' => $token->plainTextToken,
             'user' => $user],200);
         }
-    
+
 
 
     public function logout(Request $request)
