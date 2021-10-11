@@ -1,9 +1,8 @@
 <?php
 
-namespace App\Models;
+ namespace App\Models;
 
-use App\Scopes\AdminType;
-use App\Scopes\AdminTypeScope;
+
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
