@@ -4,6 +4,8 @@ namespace Modules\Menu\Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
+use Modules\Menu\Entities\Categorey;
+use Modules\Menu\Entities\Product;
 
 class MenuDatabaseSeeder extends Seeder
 {
@@ -17,5 +19,8 @@ class MenuDatabaseSeeder extends Seeder
         Model::unguard();
 
         // $this->call("OthersTableSeeder");
+        Categorey::factory(1000)->create();
+        Product::factory(1000)->create();
+
     }
 }

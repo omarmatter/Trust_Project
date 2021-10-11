@@ -41,6 +41,12 @@ return [
             'url' => env('APP_URL').'/storage',
             'visibility' => 'public',
         ],
+        'uplode' => [
+            'driver' => 'local',
+            'root' => public_path('uplode'),
+            'url' => env('APP_URL').'/uplode',
+            'visibility' => 'public',
+        ],
 
         's3' => [
             'driver' => 's3',

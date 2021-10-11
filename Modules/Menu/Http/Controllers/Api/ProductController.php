@@ -19,8 +19,12 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::paginate(100);
-        return  coustom_response(true,'All Product',new ProductCollection($products),200);
+        $products = Product::with('category')->paginate(100);
+        return coustom_response(true, 'All Product', [
+            'products' => ProductResource::collection($products),
+            $this->paginate($products)
+
+        ], 200);
     }
 
     /**
@@ -30,19 +34,34 @@ class ProductController extends Controller
      */
     public function store(ProductRequest $request)
     {
-        $product= Product::create( $request->validated());
+        $file = $request->file('main_image');
+        $image_path = $file->store('/', 'uplode');
+        $data = $request->validated();
+        $data['main_image'] = $image_path;
+        $product = Product::create($data);
 
-        foreach ($request->image_path as $imag){
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            foreach ($file as $img){
 
-            Image::create([
-                'image_path'=>$imag,
-                'product_id'=>$product->id,
-                'image_type' =>$request->image_type,
-            ]);
+                $image_path = $img->store('/', 'uplode');
+
+
+                 $product->images()->create(['image'=>$image_path]);
+            }
 
         }
+//        foreach ($request->image_path as $imag) {
+//
+//            Image::create([
+//                'image_path' => $imag,
+//                'product_id' => $product->id,
+//                'image_type' => $request->image_type,
+//            ]);
+//
+//        }
 
-        return coustom_response(true, 'success add Product',[]);
+        return coustom_response(true, 'success add Product', []);
     }
 
     /**
@@ -76,11 +95,23 @@ class ProductController extends Controller
         //
     }
 
-    public  function  fillter(Request  $request){
-        $products = Product::price($request->from , $request->to)->paginate(50);
-        return coustom_response(true,'Fillter Product',new ProductCollection($products),200);
+    public function fillter(Request $request)
+    {
+        $products = Product::with('category')->with('images');
 
+        if ($request->category_id) {
+            $products = $products->whereHas('category', function ($query) {
+                $query->where('id', request('category_id'));
+            });
+        };
 
+        if ($request->from && $request->to) {
+            $products = $products->where('price', '>=', $request->from)->where('price', '<', $request->to);
+        };
+        if ($request->name){
+            $products = $products->where('name','=',$request->name);
+        }
+        return coustom_response(true, 'Fillter Product',  ProductResource::collection($products->get()), 200);
 
 
     }

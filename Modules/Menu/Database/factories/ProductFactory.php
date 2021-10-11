@@ -2,7 +2,8 @@
 namespace Modules\Menu\Database\factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Modules\Category\Entities\Categorey;
+use Modules\Menu\Entities\Categorey;
+use Modules\Menu\Entities\Product;
 
 class ProductFactory extends Factory
 {
@@ -11,7 +12,7 @@ class ProductFactory extends Factory
      *
      * @var string
      */
-    protected $model = \Modules\Product\Entities\Product::class;
+    protected $model = Product::class;
 
     /**
      * Define the model's default state.

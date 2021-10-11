@@ -16,12 +16,12 @@ class ProductRequest extends BaseRequest
     {
         return [
             'name' =>'required|unique:products,name' ,
-            'price'=>'required' ,
+            'price'=>'required| numeric' ,
             'description' =>'required' ,
-            'category_id' =>'required' ,
+            'category_id' =>'required|exists:categoreys,id' ,
             'main_image'=>'required' ,
-            'image_type'=>'nullable ',
-            'image_path' =>'nullable '
+
+            'image' =>'nullable '
         ];
     }
 

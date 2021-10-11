@@ -9,9 +9,24 @@ class Image extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['image_type','image_path','product_id'];
+    protected $fillable = ['image'];
     protected static function newFactory()
     {
         return \Modules\Menu\Database\factories\ImageFactory::new();
+    }
+    protected $appends = [
+        'image_url',
+
+    ];
+    public function imageable()
+    {
+        return $this->morphTo();
+    }
+
+    public function getImageUrlAttribute()
+    {
+
+        return asset('uplode/' . $this->image);
+
     }
 }

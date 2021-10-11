@@ -20,14 +20,7 @@ class ImageFactory extends Factory
      */
     public function definition()
     {
-        $Product = Product::inRandomOrder()
-            ->limit(1)
-            ->first(['id']);
-        return [
-            'image_type' =>$this->faker->randomElement(['product']),
-            'image_path'=>$this->faker->imageUrl,
-            'product_id'=>$Product->id
-        ];
+
     }
 }
 
