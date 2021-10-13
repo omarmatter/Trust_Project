@@ -13,10 +13,6 @@ class ImageFacadeServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind('ImageServeice', function()
-    {
-        return new ImageServeice();
-    });
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace Modules\Menu\Http\Controllers\Api;
 
+use App\Facades\ImageFacade;
 use App\Serveices\General\ImageServeice;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -45,7 +46,7 @@ class ProductController extends Controller
 
         if ($request->has('images')) {
              foreach ($request->images as $image){
-             $imageData=    ImageServeice::uplodeImage($image);
+             $imageData=    ImageFacade::uplodeImage($image);
                  $product->images()->create($imageData);
              }
         }

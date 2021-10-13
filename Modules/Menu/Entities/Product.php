@@ -24,35 +24,34 @@ class Product extends Model
         return \Modules\Menu\Database\factories\ProductFactory::new();
     }
 
- function  scopeFillter(Builder $builder , Request $request){
-        $this->scopePrice($builder,$request->from ,$request->to);
-        $this->scopeName($builder ,$request->name);
-        $this->scopeCategory($builder,$request->category_id);
- }
-        function scopePrice(Builder $builder,$from , $to)
-        {
-            if ($from && $to) {
-                $builder->where('price', '>=', $from)->where('price', '<', $to);
-            }
-        }
-
-        function scopeName(Builder $builder,$name)
-        {
-            if ($name) {
-                $builder->where('name','like', '%' . $name .'%');
-            }
-        }
-
-
-     function  scopeCategory(Builder $builder,$category_id)
-{
-    if ($category_id) {
-        $builder->whereHas('category', function ($query) {
-            $query->where('id', request('category_id'));
-        });
+    function scopeFillter(Builder $builder, Request $request)
+    {
+        $this->scopePrice($builder, $request->from, $request->to);
+        $this->scopeName($builder, $request->name);
+        $this->scopeCategory($builder, $request->category_id);
     }
-}
 
+    function scopePrice(Builder $builder, $from, $to)
+    {
+        if ($from && $to) {
+            $builder->where('price', '>=', $from)->where('price', '<', $to);
+        }
+    }
+
+    function scopeName(Builder $builder, $name)
+    {
+        if ($name) {
+            $builder->where('name', 'like', '%' . $name . '%');
+        }
+    }
+
+
+    function scopeCategory(Builder $builder, $category_id)
+    {
+        if ($category_id) {
+            $builder->where('category_id', request('category_id'));
+        }
+    }
 
 
     public function category()

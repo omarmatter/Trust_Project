@@ -2,12 +2,14 @@
 
 namespace Modules\User\Listeners;
 
+use App\Notifications\NewUser;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Notification;
 use Modules\User\Entities\User;
 use Modules\User\Events\EventNotification;
 use Modules\User\Notifications\NewUserNotifictation;
+use Modules\User\Serveices\SmsServeice\cequensSms;
 
 class SendNotificationListener implements ShouldQueue
 {
@@ -40,7 +42,10 @@ class SendNotificationListener implements ShouldQueue
 
             $user= $event->user;
             $users = User::IsAdmin()->chunk(100, function($users) use ($user) {
+                $channel = new cequensSms();
+
                 Notification::send($users, new NewUserNotifictation($user));
+
             });
         }
     }

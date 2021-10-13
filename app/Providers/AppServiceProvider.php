@@ -6,6 +6,8 @@ use App\Models\setting;
 use App\Serveices\General\ImageServeice;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\ServiceProvider;
+use Modules\User\Serveices\SmsServeice\cequensSms;
+use Modules\User\Serveices\SmsServeice\smsInterface;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -16,7 +18,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $this->app->bind('ImageServeice',ImageServeice::class);
 
+//        $this->app->bind(smsInterface::class, function($app) {
+//
+//                return new cequensSms();
+//            });
     }
 
     /**

@@ -7,6 +7,7 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Modules\User\Entities\User;
+use Modules\User\Serveices\SmsServeice\cequensSms;
 
 class NewUserNotifictation extends Notification implements ShouldQueue
 {
@@ -18,6 +19,7 @@ class NewUserNotifictation extends Notification implements ShouldQueue
      * @return void
      */
     public $user;
+
     public function __construct(User $user)
     {
         $this->user = $user;
@@ -31,7 +33,7 @@ class NewUserNotifictation extends Notification implements ShouldQueue
      */
     public function via($notifiable)
     {
-        return ['database'];
+//        return [cequensSms::class];
     }
 
     /**
@@ -46,6 +48,9 @@ class NewUserNotifictation extends Notification implements ShouldQueue
             ->line('The introduction to the notification.')
             ->action('Notification Action', url('/'))
             ->line('Thank you for using our application!');
+    }
+    public function toCequencSms($notifiable){
+    return ('New User'. $this->user->name );
     }
 
     /**
