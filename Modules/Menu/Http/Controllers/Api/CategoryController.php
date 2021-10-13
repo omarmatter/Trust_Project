@@ -7,17 +7,24 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Modules\Menu\Entities\Categorey;
 use Modules\Menu\Http\Requests\CategoreyRequest;
+use Modules\Menu\Transformers\CategoryResource;
 
 class CategoryController extends Controller
 {
     /**
      * Display a listing of the resource.
-     * @return Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function index()
     {
         $categoreis = Categorey::paginate(100);
-        return  coustom_response(true,'All Categoreis',new CategoryCollection($categoreis),200);
+        return  coustom_response(true,'All Categoreis',[
+            'Categories'=> CategoryResource::collection($categoreis),
+            $this->paginate($categoreis)
+            ]
+
+            ,200);
+
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace Modules\Menu\Http\Controllers\Api;
 
+use App\Serveices\General\ImageServeice;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
@@ -15,14 +16,15 @@ class ProductController extends Controller
 {
     /**
      * Display a listing of the resource.
-     * @return Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function index()
+    public function index(Request  $request)
     {
-        $products = Product::with('category')->paginate(100);
+
+        $products = Product::with('category')->with('images')->Fillter($request)->paginate(100);
         return coustom_response(true, 'All Product', [
             'products' => ProductResource::collection($products),
-            $this->paginate($products)
+            'pagination' =>  $this->paginate($products)
 
         ], 200);
     }
@@ -30,27 +32,42 @@ class ProductController extends Controller
     /**
      * Store a newly created resource in storage.
      * @param Request $request
-     * @return Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function store(ProductRequest $request)
     {
-        $file = $request->file('main_image');
-        $image_path = $file->store('/', 'uplode');
-        $data = $request->validated();
-        $data['main_image'] = $image_path;
-        $product = Product::create($data);
-
-        if ($request->hasFile('image')) {
-            $file = $request->file('image');
-            foreach ($file as $img){
-
-                $image_path = $img->store('/', 'uplode');
 
 
-                 $product->images()->create(['image'=>$image_path]);
-            }
+        $product =Product::create($request->validated());
+        $imageData=    ImageServeice::uplodeImage($request->main_image);
+         $imageData['is_main']= '1';
+        $product->images()->create($imageData);
 
+        if ($request->has('images')) {
+             foreach ($request->images as $image){
+             $imageData=    ImageServeice::uplodeImage($image);
+                 $product->images()->create($imageData);
+             }
         }
+
+
+//        $file = $request->file('main_image');
+//        $image_path = $fil$data = $request->validated()e->store('/', 'uplode');
+//        ;
+//        $data['main_image'] = $image_path;
+//        $product = Product::create($data);
+//
+//        if ($request->hasFile('image')) {
+//            $file = $request->file('image');
+//            foreach ($file as $img) {
+//
+//                $image_path = $img->store('/', 'uplode');
+//
+//
+//                $product->images()->create(['image' => $image_path]);
+//            }
+
+
 //        foreach ($request->image_path as $imag) {
 //
 //            Image::create([
@@ -97,21 +114,21 @@ class ProductController extends Controller
 
     public function fillter(Request $request)
     {
-        $products = Product::with('category')->with('images');
+        $products = Product::with('category')->with('images')->Fillter($request);
 
-        if ($request->category_id) {
-            $products = $products->whereHas('category', function ($query) {
-                $query->where('id', request('category_id'));
-            });
-        };
-
-        if ($request->from && $request->to) {
-            $products = $products->where('price', '>=', $request->from)->where('price', '<', $request->to);
-        };
-        if ($request->name){
-            $products = $products->where('name','=',$request->name);
-        }
-        return coustom_response(true, 'Fillter Product',  ProductResource::collection($products->get()), 200);
+//        if ($request->category_id) {
+//            $products = $products->whereHas('category', function ($query) {
+//                $query->where('id', request('category_id'));
+//            });
+//        };
+//
+//        if ($request->from && $request->to) {
+//            $products = $products->where('price', '>=', $request->from)->where('price', '<', $request->to);
+//        };
+//        if ($request->name){
+//            $products = $products->where('name','=',$request->name);
+//        }
+        return coustom_response(true, 'Fillter Product', ProductResource::collection($products->get()), 200);
 
 
     }

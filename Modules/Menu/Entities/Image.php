@@ -9,7 +9,7 @@ class Image extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['image'];
+    protected $fillable = ['image','size','is_main','type'];
     protected static function newFactory()
     {
         return \Modules\Menu\Database\factories\ImageFactory::new();

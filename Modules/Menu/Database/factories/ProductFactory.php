@@ -30,7 +30,6 @@ class ProductFactory extends Factory
             'name' =>$this->faker->name,
             'price'=>$this->faker->numberBetween(50,200),
             'description'=>$this->faker->text ,
-            'main_image'=>$this->faker->imageUrl,
             'category_id'=>$category->id
         ];
     }

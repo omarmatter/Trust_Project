@@ -19,7 +19,7 @@ class ProductRequest extends BaseRequest
             'price'=>'required| numeric' ,
             'description' =>'required' ,
             'category_id' =>'required|exists:categoreys,id' ,
-            'main_image'=>'required' ,
+//            'main_image'=>'required' ,
 
             'image' =>'nullable '
         ];

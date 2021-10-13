@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\setting;
+use App\Serveices\General\ImageServeice;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\ServiceProvider;
 
@@ -15,7 +16,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+
     }
 
     /**
