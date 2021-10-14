@@ -2,9 +2,17 @@
 
 namespace App\Facades;
 
-class ImageFacade
+use Illuminate\Support\Facades\Facade;
+
+class ImageFacade extends  Facade
 {
-    protected static function getImageService() {
-        return 'ImageServeice'; }
+    protected static function getFacadeAccessor() {
+        return 'ImageServeice';
+    }
+
+
+
 
 }
+
+

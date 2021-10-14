@@ -2,12 +2,14 @@
 
 namespace Modules\User\Notifications;
 
+use App\channel\cequensChannel;
+use App\Facades\smsFacade;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Support\Facades\Log;
 use Modules\User\Entities\User;
-use Modules\User\Serveices\SmsServeice\cequensSms;
 
 class NewUserNotifictation extends Notification implements ShouldQueue
 {
@@ -33,7 +35,7 @@ class NewUserNotifictation extends Notification implements ShouldQueue
      */
     public function via($notifiable)
     {
-//        return [cequensSms::class];
+        return [ 'database' ,   cequensChannel::class];
     }
 
     /**
@@ -49,8 +51,10 @@ class NewUserNotifictation extends Notification implements ShouldQueue
             ->action('Notification Action', url('/'))
             ->line('Thank you for using our application!');
     }
+
     public function toCequencSms($notifiable){
-    return ('New User'. $this->user->name );
+
+          return  smsFacade::send($notifiable->phone,'wrere4');
     }
 
     /**
@@ -63,6 +67,7 @@ class NewUserNotifictation extends Notification implements ShouldQueue
 
     public function toDatabase($notifiable)
     {
+        Log::info('database');
         return [
             'title' => 'New User',
             'body' => 'The name User ' . $this->user->name,
@@ -73,5 +78,6 @@ class NewUserNotifictation extends Notification implements ShouldQueue
 
     public function toArray($notifiable)
     {
+
     }
 }

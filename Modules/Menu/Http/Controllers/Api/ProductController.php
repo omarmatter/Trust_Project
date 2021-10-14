@@ -3,6 +3,7 @@
 namespace Modules\Menu\Http\Controllers\Api;
 
 use App\Facades\ImageFacade;
+use App\Facades\smsFacade;
 use App\Serveices\General\ImageServeice;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -40,7 +41,7 @@ class ProductController extends Controller
 
 
         $product =Product::create($request->validated());
-        $imageData=    ImageServeice::uplodeImage($request->main_image);
+        $imageData=    ImageFacade::uplodeImage($request->main_image);
          $imageData['is_main']= '1';
         $product->images()->create($imageData);
 

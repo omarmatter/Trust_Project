@@ -57,7 +57,7 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
-    public function routeNotificationForCequencSms(){
+    public function routeNotificationForSms(){
         return $this->phone_number;
     }
 

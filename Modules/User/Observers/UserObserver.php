@@ -4,6 +4,7 @@ namespace Modules\User\Observers;
 
 use Modules\User\Entities\User;
 use Modules\User\Events\EventNotification;
+use Modules\User\Serveices\SmsServeice\cequensSms;
 
 
 class UserObserver
@@ -18,6 +19,7 @@ class UserObserver
     {
 
         event(new EventNotification($user));
+
 
     }
 

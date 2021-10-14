@@ -19,6 +19,8 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->bind('ImageServeice',ImageServeice::class);
+        $this->app->bind('cequensSms',cequensSms::class);
+
 
 //        $this->app->bind(smsInterface::class, function($app) {
 //

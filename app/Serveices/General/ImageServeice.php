@@ -8,7 +8,7 @@ use Modules\Menu\Entities\Product;
 
 class ImageServeice
 {
-    static  function  uplodeImage($file){
+    public  function  uplodeImage($file){
 
 
      $date =  date('Y-m-d');
