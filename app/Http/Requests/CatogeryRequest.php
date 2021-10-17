@@ -24,7 +24,8 @@ class CatogeryRequest extends BaseRequest
     public function rules()
     {
         return [
-            'name' =>'required'
+            'name' =>'required' ,
+            
         ];
     }
 }

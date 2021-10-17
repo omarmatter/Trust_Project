@@ -1,10 +1,11 @@
 <?php
 
-namespace Modules\User\Http\Requests;
+namespace Modules\Order\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Modules\User\Http\Requests\BaseRequest;
 
-class UserRequest extends BaseRequest
+class StoreCartRequest extends BaseRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -14,12 +15,8 @@ class UserRequest extends BaseRequest
     public function rules()
     {
         return [
-            
-            'name' => 'required',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required| min:8',
-            'gender' => 'required',
-            'phone_number' => 'required'
+            'quantity' =>'required' ,
+            'product_id' =>'required'
         ];
     }
 
