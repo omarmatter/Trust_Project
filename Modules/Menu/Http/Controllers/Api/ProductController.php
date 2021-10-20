@@ -8,11 +8,15 @@ use App\Serveices\General\ImageServeice;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Modules\Menu\Entities\Image;
 use Modules\Menu\Entities\Product;
 use Modules\Menu\Http\Requests\ProductRequest;
 use Modules\Menu\Transformers\ProductCollection;
 use Modules\Menu\Transformers\ProductResource;
+use Modules\Order\Entities\CartProduct;
+use Modules\Order\Entities\OrderProduct;
 
 class ProductController extends Controller
 {
@@ -20,13 +24,21 @@ class ProductController extends Controller
      * Display a listing of the resource.
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index(Request  $request)
-    {
 
-        $products = Product::with('category')->with('images')->Fillter($request)->paginate(100);
+    public function __construct()
+    {
+        $this->middleware(['auth:sanctum','isAdmin'])->except('index');
+    }
+
+    public function index(Request $request)
+    {
+        $user = auth('sanctum')->user();
+//        return Product::InCart()->get();
+//         Product::Fillter($request)->get();
+        $products= Product::InCart()->with('images')->Fillter($request)->paginate(100);
         return coustom_response(true, 'All Product', [
             'products' => ProductResource::collection($products),
-            'pagination' =>  $this->paginate($products)
+            'pagination' => $this->paginate($products)
 
         ], 200);
     }
@@ -39,17 +51,17 @@ class ProductController extends Controller
     public function store(ProductRequest $request)
     {
 
-
-        $product =Product::create($request->validated());
-        $imageData=    ImageFacade::uplodeImage($request->main_image);
-         $imageData['is_main']= '1';
+dd(Auth::user());
+        $product = Product::create($request->validated());
+        $imageData = ImageFacade::uplodeImage($request->main_image);
+        $imageData['is_main'] = '1';
         $product->images()->create($imageData);
 
         if ($request->has('images')) {
-             foreach ($request->images as $image){
-             $imageData=    ImageFacade::uplodeImage($image);
-                 $product->images()->create($imageData);
-             }
+            foreach ($request->images as $image) {
+                $imageData = ImageFacade::uplodeImage($image);
+                $product->images()->create($imageData);
+            }
         }
 
 

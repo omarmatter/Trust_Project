@@ -6,7 +6,11 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Modules\Menu\Entities\Product;
+use Modules\Order\Entities\Cart;
 use Modules\Order\Entities\order;
+use Modules\Order\Entities\OrderProduct;
 use Modules\Order\Http\Requests\OrdertRequest;
 use Modules\Order\Transformers\OrderResource;
 
@@ -18,7 +22,7 @@ class OrderController extends Controller
      */
     public function index()
     {
-        $orders = order::with('product')->where('user_id', Auth::user()->id)->get();
+        $orders = Auth::user()->orders;
 
         return coustom_response(true, 'All orders', OrderResource::collection($orders));
 
@@ -31,16 +35,41 @@ class OrderController extends Controller
      */
     public function store(OrdertRequest $request)
     {
-        $userId = Auth::user()->id;
-        $data = $request->validated();
-        $data['user_id'] = $userId;
-        order::updateOrCreate([
-                'user_id' => $data['user_id'],
-                'product_id' => $data['product_id']
-            ]
-            , $data
-        );
-        return coustom_response(true, 'success order', []);
+        $cart = Cart::where('user_id', Auth::id())->first();
+
+        if (!$cart) {
+            return coustom_response(true, 'not found cart', []);
+        }
+        DB::beginTransaction();
+        try {
+            $data = $request->validated();
+            $data['user_id'] = Auth::id();
+            $cart_products = $cart->cart_products()->get();
+            $data['price'] = 0;
+            $order = order::create($data);
+
+            $total_price = 0;
+
+            foreach ($cart_products as $cart_product) {
+
+                $total_price += $cart_product->product->price * $cart_product->quantity;
+                OrderProduct::create([
+                    'order_id' => $order->id,
+                    'product_id' => $cart_product->product_id,
+                    'quantity' => $cart_product->quantity,
+
+                ]);
+            }
+            $order->price = $total_price;
+            $order->save();
+            Auth::user()->cart()->delete();
+            DB::commit();
+            return coustom_response(true, 'success order', []);
+        } catch (Throwable $ex) {
+            DB::rollback();
+            throw $ex;
+
+        }
     }
 
     /**
@@ -52,7 +81,7 @@ class OrderController extends Controller
     {
         $order = order::findOrFail($id);
 
-        return coustom_response(true, 'order',  new OrderResource($order));
+        return coustom_response(true, 'order', new OrderResource($order));
     }
 
     /**
@@ -76,5 +105,19 @@ class OrderController extends Controller
         order::findOrFail($id)->delete();
 
         return coustom_response(true, 'delete success', []);
+    }
+
+    public function how_many_orders(Request $request)
+    {
+        $orderCount = Auth::user()->orders()->select(
+            DB::raw("DATE_FORMAT(created_at,'%M') as months"),
+            DB::raw('COUNT(created_at) as count'))
+            ->where('created_at', '>=', $request->from)
+            ->where('created_at', '<=', $request->to)
+            ->groupBy('months')->get();
+
+
+        return coustom_response(true, 'Order Count', $orderCount);
+
     }
 }

@@ -9,7 +9,9 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Modules\Order\Entities\Cart;
+use Modules\Order\Entities\CartProduct;
 use Modules\Order\Http\Requests\StoreCartRequest;
+use Modules\Order\Transformers\CartProductResource;
 use Modules\Order\Transformers\cartResource;
 
 class CartController extends Controller
@@ -20,9 +22,13 @@ class CartController extends Controller
      */
     public function index()
     {
-        $carts = Cart::where('user_id', Auth::user()->id)->with('product')->get();
+        $cart= Auth::user()->cart->withCount('cart_products')->get();
+//        return  $cart;
 
-        return coustom_response(true, 'All Cart', cartResource::collection($carts));
+//        ->cart_products;
+//        $carts = Cart::where('user_id', Auth::user()->id)->with('cart_products')->get();
+
+        return coustom_response(true, 'All Cart', cartResource::collection($cart));
     }
 
     /**
@@ -32,14 +38,19 @@ class CartController extends Controller
      */
     public function store(StoreCartRequest $request)
     {
+        $user_id =Auth::id();
         $data = $request->validated();
-        $userId = Auth::user()->id;
-        $data['user_id'] = $userId;
-        $qu = DB::table('carts')
-            ->where('product_id', $request->product_id)
-            ->value('quantity');
-        $data['quantity'] = $qu + $data['quantity'];
-        Cart::updateOrCreate(['user_id' => $data['user_id'],
+
+         $cart=  Cart::where('user_id',$user_id)->first();
+            if(!$cart){
+             $cart=   Cart::create(['user_id' =>$user_id]);
+            }
+
+            $data['cart_id'] =$cart->id;
+        $qu =  CartProduct::where('product_id', $request->product_id)->value('quantity');
+
+        $data['quantity'] = $qu + $data['quantity'] ;
+            CartProduct::updateOrCreate(['cart_id' => $cart->id,
             'product_id' => $data['product_id']
         ], $data);
 
@@ -51,11 +62,11 @@ class CartController extends Controller
      * @param int $id
      * @return Response
      */
-    public function show($id)
-    {
-        $cart = Cart::findOrFail($id);
-        return coustom_response(true, 'cart', new cartResource($cart), 200);
-    }
+//    public function show($id)
+//    {
+//        $cart = Cart::with('cart_products')->findOrFail($id);
+//        return coustom_response(true, 'cart', new cartResource($cart), 200);
+//    }
 
     /**
      * Update the specified resource in storage.
@@ -73,9 +84,11 @@ class CartController extends Controller
      * @param int $id
      * @return Response
      */
-    public function destroy($id)
+    public function destroy()
     {
-        $cart = Cart::findOrFail($id)->delete();
+        Auth::user()->cart()->delete();
+
+//        $cart = Cart::findOrFail($id)->delete();
         return coustom_response(true, 'success delete', []);
     }
 }

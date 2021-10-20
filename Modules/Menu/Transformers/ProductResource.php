@@ -3,6 +3,8 @@
 namespace Modules\Menu\Transformers;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Auth;
+use Modules\Order\Entities\CartProduct;
 
 class ProductResource extends JsonResource
 {
@@ -14,12 +16,15 @@ class ProductResource extends JsonResource
      */
     public function toArray($request)
     {
+
         return [
             'id' => $this->id,
-            'name'=>$this->name ,
+                'name'=>$this->name ,
             'price'=>$this->price,
             'description' =>$this->description,
             'category'=>$this->category->name,
+            'inCart' => $this->cart_products_count > 0,
+            'quntitey' => $this->cart_products_count ?? 0,
             'images'=> ImageResource::collection($this->images)
 
         ];

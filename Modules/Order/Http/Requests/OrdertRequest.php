@@ -15,11 +15,8 @@ class OrdertRequest extends BaseRequest
     public function rules()
     {
         return [
-            'tax' =>'required|sometimes',
-            'product_id'=>'required',
-            'quantity' =>'required|numeric' ,
-            'price' =>'required|numeric',
-            'payment_method' =>'required'
+            'method_id' =>'required',
+
 
         ];
     }

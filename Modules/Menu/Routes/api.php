@@ -22,7 +22,7 @@ Route::middleware(['auth:sanctum','isAdmin'])->group(function () {
 //    Route::resource('users','Api\UserController');
 
         Route::resource('categories', 'Api\CategoryController');
-        Route::resource('products', 'Api\ProductController');
+
 //        Route::get('product/fillter', [\Modules\Menu\Http\Controllers\Api\ProductController::class, 'fillter']);
 
 
@@ -31,5 +31,5 @@ Route::middleware(['auth:sanctum','isAdmin'])->group(function () {
 });
 
 
-
+Route::resource('products', 'Api\ProductController');
 

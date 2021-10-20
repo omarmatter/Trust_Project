@@ -10,16 +10,22 @@ class Cart extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id','quantity','product_id'];
+    protected $fillable = ['user_id'];
 
     protected static function newFactory()
     {
         return \Modules\Order\Database\factories\CartFactory::new();
     }
 
-     public function product()
-     {
-         return $this->belongsTo(Product::class);
-     }
 
+
+       public function cart_products()
+       {
+           return $this->hasMany(CartProduct::class,'cart_id');
+       }
+
+       public function user()
+       {
+           return $this->belongsTo(User::class);
+       }
 }

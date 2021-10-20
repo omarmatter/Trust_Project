@@ -4,9 +4,8 @@ namespace Modules\Order\Transformers;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use Modules\Menu\Transformers\ProductResource;
-use Modules\Order\Entities\CartProduct;
 
-class cartResource extends JsonResource
+class CartProductResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,11 +15,11 @@ class cartResource extends JsonResource
      */
     public function toArray($request)
     {
-        return [
-            'id' =>$this->id ,
-            'count'=>$this->cart_products_count,
-             'Cart products' =>
-                 CartProductResource::collection($this->cart_products)
+        return  [
+          'id' =>$this->id ,
+            'quantity' =>$this->quantity,
+          'product' => new ProductResource($this->product),
+
         ];
     }
 }

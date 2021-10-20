@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Modules\Order\Entities\Cart;
+use Modules\Order\Entities\order;
 
 class User extends Authenticatable
 {
@@ -61,5 +63,12 @@ class User extends Authenticatable
         return $this->phone_number;
     }
 
-
+public function cart()
+{
+    return $this->hasOne(Cart::class);
+}
+ public function orders()
+ {
+     return $this->hasMany(order::class );
+ }
 }

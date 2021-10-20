@@ -22,5 +22,5 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::resource('carts','Api\CartController');
     Route::resource('orders','Api\OrderController');
-
+    Route::get('how_many_orders','Api\OrderController@how_many_orders');
 });
