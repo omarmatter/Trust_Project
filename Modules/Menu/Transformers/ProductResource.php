@@ -19,12 +19,12 @@ class ProductResource extends JsonResource
 
         return [
             'id' => $this->id,
-                'name'=>$this->name ,
+            'name'=>$this->name ,
             'price'=>$this->price,
             'description' =>$this->description,
             'category'=>$this->category->name,
             'inCart' => $this->cart_products_count > 0,
-            'quntitey' => $this->cart_products_count ?? 0,
+            'quantity' => $this->cart_products_count ?? 0,
             'images'=> ImageResource::collection($this->images)
 
         ];

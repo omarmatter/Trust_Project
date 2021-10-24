@@ -110,11 +110,11 @@ class OrderController extends Controller
     public function how_many_orders(Request $request)
     {
         $orderCount = Auth::user()->orders()->select(
-            DB::raw("DATE_FORMAT(created_at,'%M') as months"),
-            DB::raw('COUNT(created_at) as count'))
+            DB::raw("DATE_FORMAT(created_at,'%M %Y') as Date "),
+            DB::raw('COUNT(id) as count'))
             ->where('created_at', '>=', $request->from)
             ->where('created_at', '<=', $request->to)
-            ->groupBy('months')->get();
+            ->groupBy('Date')->get();
 
 
         return coustom_response(true, 'Order Count', $orderCount);

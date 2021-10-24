@@ -4,6 +4,7 @@ namespace Modules\Order\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Facades\DB;
 use Modules\Menu\Entities\Product;
 
 class Cart extends Model
@@ -18,14 +19,16 @@ class Cart extends Model
     }
 
 
+    public function cart_products()
+    {
+        return $this->hasMany(CartProduct::class, 'cart_id');
+    }
 
-       public function cart_products()
-       {
-           return $this->hasMany(CartProduct::class,'cart_id');
-       }
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
-       public function user()
-       {
-           return $this->belongsTo(User::class);
-       }
+
 }
+

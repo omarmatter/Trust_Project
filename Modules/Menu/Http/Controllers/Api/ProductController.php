@@ -32,9 +32,7 @@ class ProductController extends Controller
 
     public function index(Request $request)
     {
-        $user = auth('sanctum')->user();
-//        return Product::InCart()->get();
-//         Product::Fillter($request)->get();
+
         $products= Product::InCart()->with('images')->Fillter($request)->paginate(100);
         return coustom_response(true, 'All Product', [
             'products' => ProductResource::collection($products),

@@ -122,7 +122,7 @@ class Product extends Model
         $user = auth('sanctum')->user();
         if ($user)
             $builder->withCount(['cart_products' => function ($query) use ($user) {
-                $query->select('quantity')->whereHas('cart', function ($q) use ($user) {
+                    $query->select('quantity')->whereHas('cart', function ($q) use ($user) {
                     $q->where('user_id', $user->id);
 
                 });

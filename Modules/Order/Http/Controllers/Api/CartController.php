@@ -13,6 +13,7 @@ use Modules\Order\Entities\CartProduct;
 use Modules\Order\Http\Requests\StoreCartRequest;
 use Modules\Order\Transformers\CartProductResource;
 use Modules\Order\Transformers\cartResource;
+use Modules\Order\Transformers\TestResource;
 
 class CartController extends Controller
 {
@@ -22,11 +23,7 @@ class CartController extends Controller
      */
     public function index()
     {
-        $cart= Auth::user()->cart->withCount('cart_products')->get();
-//        return  $cart;
-
-//        ->cart_products;
-//        $carts = Cart::where('user_id', Auth::user()->id)->with('cart_products')->get();
+        $cart = Auth::user()->cart->withCount(['cart_products'])->get();
 
         return coustom_response(true, 'All Cart', cartResource::collection($cart));
     }
@@ -38,19 +35,19 @@ class CartController extends Controller
      */
     public function store(StoreCartRequest $request)
     {
-        $user_id =Auth::id();
+        $user_id = Auth::id();
         $data = $request->validated();
 
-         $cart=  Cart::where('user_id',$user_id)->first();
-            if(!$cart){
-             $cart=   Cart::create(['user_id' =>$user_id]);
-            }
+        $cart = Cart::where('user_id', $user_id)->first();
+        if (!$cart) {
+            $cart = Cart::create(['user_id' => $user_id]);
+        }
 
-            $data['cart_id'] =$cart->id;
-        $qu =  CartProduct::where('product_id', $request->product_id)->value('quantity');
+        $data['cart_id'] = $cart->id;
+        $qu = CartProduct::where('product_id', $request->product_id)->value('quantity');
 
-        $data['quantity'] = $qu + $data['quantity'] ;
-            CartProduct::updateOrCreate(['cart_id' => $cart->id,
+        $data['quantity'] = $qu + $data['quantity'];
+        CartProduct::updateOrCreate(['cart_id' => $cart->id,
             'product_id' => $data['product_id']
         ], $data);
 

@@ -71,4 +71,6 @@ public function cart()
  {
      return $this->hasMany(order::class );
  }
+
+
 }

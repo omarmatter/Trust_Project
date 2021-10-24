@@ -19,8 +19,10 @@ class cartResource extends JsonResource
         return [
             'id' =>$this->id ,
             'count'=>$this->cart_products_count,
-             'Cart products' =>
-                 CartProductResource::collection($this->cart_products)
-        ];
+
+            'product'=>TestResource::collection($this->cart_products) ,
+
+//              'p'=>$this->cart_products->product
+            ];
     }
 }
