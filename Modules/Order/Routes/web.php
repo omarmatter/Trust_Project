@@ -11,6 +11,10 @@
 |
 */
 
-Route::prefix('order')->group(function() {
-    Route::get('/', 'OrderController@index');
-});
+//Route::prefix('order')->group(function() {
+//    Route::get('/', 'OrderController@index');
+//});
+
+Route::get('{any}', function () {
+    return view('app');
+})->where('any', '.*');

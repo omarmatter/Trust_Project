@@ -31,7 +31,7 @@ class AuthController extends Controller
 
         $user = User::where('email', $request->email)->first();
         if (!$user || !Hash::check($request->password, $user->password)) {
-            return coustom_response(false,'Invalid username and password combination',401);
+            return coustom_response(false,'Invalid username and password combination',[],401);
         }
             $token = $user->createToken('auth');
             return coustom_response(true,'login Success',['token' => $token->plainTextToken,

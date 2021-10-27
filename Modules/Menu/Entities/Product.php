@@ -16,7 +16,7 @@ class Product extends Model
 {
     use HasFactory, ImageableTrait;
 
-    protected $fillable = ['name', 'price', 'category_id', 'description', 'main_image'];
+    protected $fillable = ['name', 'price', 'category_id', 'description'];
 
     protected $appends = [
         'image_url',
@@ -122,7 +122,7 @@ class Product extends Model
         $user = auth('sanctum')->user();
         if ($user)
             $builder->withCount(['cart_products' => function ($query) use ($user) {
-                    $query->select('quantity')->whereHas('cart', function ($q) use ($user) {
+                $query->select('quantity')->whereHas('cart', function ($q) use ($user) {
                     $q->where('user_id', $user->id);
 
                 });

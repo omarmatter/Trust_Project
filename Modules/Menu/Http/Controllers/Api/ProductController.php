@@ -34,7 +34,8 @@ class ProductController extends Controller
     {
 
         $products= Product::InCart()->with('images')->Fillter($request)->paginate(100);
-        return coustom_response(true, 'All Product', [
+//        return $products;
+         return coustom_response(true, 'All Product', [
             'products' => ProductResource::collection($products),
             'pagination' => $this->paginate($products)
 
@@ -49,7 +50,7 @@ class ProductController extends Controller
     public function store(ProductRequest $request)
     {
 
-dd(Auth::user());
+
         $product = Product::create($request->validated());
         $imageData = ImageFacade::uplodeImage($request->main_image);
         $imageData['is_main'] = '1';
@@ -121,7 +122,9 @@ dd(Auth::user());
      */
     public function destroy($id)
     {
-        //
+        Product::findOrFail($id)->delete();
+        return coustom_response(true, 'success delete Product',[], 200);
+
     }
 
     public function fillter(Request $request)

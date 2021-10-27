@@ -23,9 +23,18 @@ class CartController extends Controller
      */
     public function index()
     {
-        $cart = Auth::user()->cart->withCount(['cart_products'])->get();
+        $carProducts = Auth::user()->cart->cart_products;
+        $productsTotal = $carProducts->sum(function ($item){
+            return $item->product->price * $item->quantity;
+        });
+        $tax = 0.15;
+        $res['products'] = TestResource::collection($carProducts);
+        $res['products_count'] = $carProducts->count();
+        $res['products_quantity_count'] = $carProducts->sum('quantity');
+        $res['total_products'] = $productsTotal;
+        $res['total_after_tax']= $productsTotal-($productsTotal*$tax);
 
-        return coustom_response(true, 'All Cart', cartResource::collection($cart));
+        return coustom_response(true, 'All Cart',$res );
     }
 
     /**
@@ -47,8 +56,8 @@ class CartController extends Controller
         $qu = CartProduct::where('product_id', $request->product_id)->value('quantity');
 
         $data['quantity'] = $qu + $data['quantity'];
-        CartProduct::updateOrCreate(['cart_id' => $cart->id,
-            'product_id' => $data['product_id']
+        CartProduct::updateOrCreate(
+            ['cart_id' => $cart->id, 'product_id' => $data['product_id']
         ], $data);
 
         return coustom_response(true, 'add success to cart', [], 200);

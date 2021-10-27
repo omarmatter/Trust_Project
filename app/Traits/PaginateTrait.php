@@ -11,8 +11,13 @@ trait paginateTrait{
            'total' => $model->total(),
            'count' => $model->count(),
            'per_page' => $model->perPage(),
-           'next_page' => $model->nextPageUrl(),
-           'total_pages' => $model->lastPage()
+           'current_page' => $model->currentPage(),
+           'last_page' => $model->lastPage(),
+           'from' => $model->firstItem(),
+           'to' => $model->lastItem(),
+           'links '=>$model->links()
+
+
        ];
 
     }
