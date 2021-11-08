@@ -21,7 +21,10 @@ import { BootstrapVue } from 'bootstrap-vue'
 Vue.use(BootstrapVue)
 
 
+import VueConfirmDialog from 'vue-confirm-dialog'
 
+Vue.use(VueConfirmDialog)
+Vue.component('vue-confirm-dialog', VueConfirmDialog.default)
 
 
 const router = new VueRouter({

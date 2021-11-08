@@ -29,6 +29,7 @@
         "laravel-vue-pagination": "^2.3.1",
         "vform": "^2.1.1",
         "vue-axios": "^3.3.7",
+        "vue-confirm-dialog": "^1.0.2",
         "vue-route": "^1.5.1",
         "vue-router": "^3.5.2",
         "vuejs-datatable": "^2.0.0-alpha.7"

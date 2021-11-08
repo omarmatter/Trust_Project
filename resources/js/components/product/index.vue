@@ -15,7 +15,7 @@
             <input placeholder="Search product by name" v-model="name_product" >
         </div>
         <div class="table-responsive">
-
+            <vue-confirm-dialog></vue-confirm-dialog>
             <table class="table table-bordered" id="my-table" >
                 <thead class="bg-primary text-white">
                 <tr>
@@ -84,7 +84,7 @@
                             </div>
                             <div class="mb-3">
                                 <select class=" form-control" v-model="form.category_id">
-                                    <option selected>Open this select menu</option>
+
                                     <option v-for='categorey in Categories' :value='categorey.id'>{{ categorey.name }}</option>
                                 </select>
                             </div>
@@ -136,11 +136,13 @@ export default {
                         category_id: '',
                         main_image: '',
 
+
                     }),
 
                     Categories: [],
                     perPage: 100,
                     category_id:'',
+                    product_id : '',
                     name_product :'',
                     currentPage: 1,
                     rows:'',
@@ -189,13 +191,29 @@ export default {
         },
         async deleteItem(id) {
 
+            this.$confirm(
+                {
+                    message: `Are you sure delete this item ?`,
+                    button: {
+                        no: 'No',
+                        yes: 'Yes'
+                    },
+                    /**
+                     * Callback Function
+                     * @param {Boolean} confirm
+                     */
+                    callback: confirm => {
+                        if (confirm) {
+                            axios.delete(`http://127.0.0.1:8000/api/products/${id}`, header).then((response) => {
+                                console.log(response)
+                                swal(response.data.message);
+                                setTimeout("location.reload(true);", 2000)
 
-            axios.delete(`http://127.0.0.1:8000/api/products/${id}`, header).then((response) => {
-                console.log(response)
-                swal(response.data.message);
-                setTimeout("location.reload(true);", 2000)
-
-            });
+                            });
+                        }
+                    }
+                }
+            )
 
 
 
@@ -207,6 +225,7 @@ export default {
 
         edit(item){
             this.form.name = item.name
+
             this.form.description =item.description
             this.form.price =item.price
             this.form.category_id = item.category_id
@@ -214,9 +233,17 @@ export default {
 
             $("#edit-product").modal('show');
 
+        },
+
+        update(product_id) {
+            axios.post(`http://127.0.0.1:8000/api/products/${id}`, header).then((response) => {
+                console.log(response)
+                swal(response.data.message);
+                setTimeout("location.reload(true);", 2000)
+
+            });
         }
-    }
-}
+    }}
 </script>
 
 <style scoped>

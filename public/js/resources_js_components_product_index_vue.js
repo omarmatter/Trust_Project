@@ -164,6 +164,7 @@ var header = {
       Categories: [],
       perPage: 100,
       category_id: '',
+      product_id: '',
       name_product: '',
       currentPage: 1,
       rows: ''
@@ -232,15 +233,33 @@ var header = {
       }))();
     },
     deleteItem: function deleteItem(id) {
+      var _this3 = this;
+
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee3() {
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee3$(_context3) {
           while (1) {
             switch (_context3.prev = _context3.next) {
               case 0:
-                axios["delete"]("http://127.0.0.1:8000/api/products/".concat(id), header).then(function (response) {
-                  console.log(response);
-                  swal(response.data.message);
-                  setTimeout("location.reload(true);", 2000);
+                _this3.$confirm({
+                  message: "Are you sure delete this item ?",
+                  button: {
+                    no: 'No',
+                    yes: 'Yes'
+                  },
+
+                  /**
+                   * Callback Function
+                   * @param {Boolean} confirm
+                   */
+                  callback: function callback(confirm) {
+                    if (confirm) {
+                      axios["delete"]("http://127.0.0.1:8000/api/products/".concat(id), header).then(function (response) {
+                        console.log(response);
+                        swal(response.data.message);
+                        setTimeout("location.reload(true);", 2000);
+                      });
+                    }
+                  }
                 });
 
               case 1:
@@ -258,6 +277,13 @@ var header = {
       this.form.category_id = item.category_id;
       console.log(document.querySelector('#img').src = item.images);
       $("#edit-product").modal('show');
+    },
+    update: function update(product_id) {
+      axios.post("http://127.0.0.1:8000/api/products/".concat(id), header).then(function (response) {
+        console.log(response);
+        swal(response.data.message);
+        setTimeout("location.reload(true);", 2000);
+      });
     }
   }
 });
@@ -1214,6 +1240,8 @@ var render = function() {
       "div",
       { staticClass: "table-responsive" },
       [
+        _c("vue-confirm-dialog"),
+        _vm._v(" "),
         _c(
           "table",
           { staticClass: "table table-bordered", attrs: { id: "my-table" } },
@@ -1441,20 +1469,14 @@ var render = function() {
                           }
                         }
                       },
-                      [
-                        _c("option", { attrs: { selected: "" } }, [
-                          _vm._v("Open this select menu")
-                        ]),
-                        _vm._v(" "),
-                        _vm._l(_vm.Categories, function(categorey) {
-                          return _c(
-                            "option",
-                            { domProps: { value: categorey.id } },
-                            [_vm._v(_vm._s(categorey.name))]
-                          )
-                        })
-                      ],
-                      2
+                      _vm._l(_vm.Categories, function(categorey) {
+                        return _c(
+                          "option",
+                          { domProps: { value: categorey.id } },
+                          [_vm._v(_vm._s(categorey.name))]
+                        )
+                      }),
+                      0
                     )
                   ]),
                   _vm._v(" "),
