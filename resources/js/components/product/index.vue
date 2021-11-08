@@ -202,15 +202,7 @@ export default {
 
         },
 
-        async Filtter(id) {
 
-
-
-
-
-
-
-        },
 
 
         edit(item){

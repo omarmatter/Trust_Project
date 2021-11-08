@@ -77,7 +77,7 @@ protected  $product;
     public function update(ProductRequest $request, $id)
     {
 
-
+             $this->product->update($request,$id);
 
 
         return coustom_response(true, 'update add Product', []);
