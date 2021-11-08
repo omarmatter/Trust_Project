@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\DB;
 use Modules\Menu\Entities\Image;
 use Modules\Menu\Entities\Product;
 use Modules\Menu\Http\Requests\ProductRequest;
+use Modules\Menu\Repository\ProductRepositoryInterface;
 use Modules\Menu\Transformers\ProductCollection;
 use Modules\Menu\Transformers\ProductResource;
 use Modules\Order\Entities\CartProduct;
@@ -24,17 +25,19 @@ class ProductController extends Controller
      * Display a listing of the resource.
      * @return \Illuminate\Http\JsonResponse
      */
-
-    public function __construct()
+protected  $product;
+    public function __construct(ProductRepositoryInterface $product)
     {
         $this->middleware(['auth:sanctum','isAdmin'])->except('index');
+        $this->product=$product;
     }
 
     public function index(Request $request)
     {
 
-        $products= Product::InCart()->with('images')->Fillter($request)->paginate(100);
-//        return $products;
+        $products= $this->product->index($request);
+
+        //        return $products;
          return coustom_response(true, 'All Product', [
             'products' => ProductResource::collection($products),
             'pagination' => $this->paginate($products)
@@ -51,46 +54,7 @@ class ProductController extends Controller
     {
 
 
-        $product = Product::create($request->validated());
-        $imageData = ImageFacade::uplodeImage($request->main_image);
-        $imageData['is_main'] = '1';
-        $product->images()->create($imageData);
-
-        if ($request->has('images')) {
-            foreach ($request->images as $image) {
-                $imageData = ImageFacade::uplodeImage($image);
-                $product->images()->create($imageData);
-            }
-        }
-
-
-//        $file = $request->file('main_image');
-//        $image_path = $fil$data = $request->validated()e->store('/', 'uplode');
-//        ;
-//        $data['main_image'] = $image_path;
-//        $product = Product::create($data);
-//
-//        if ($request->hasFile('image')) {
-//            $file = $request->file('image');
-//            foreach ($file as $img) {
-//
-//                $image_path = $img->store('/', 'uplode');
-//
-//
-//                $product->images()->create(['image' => $image_path]);
-//            }
-
-
-//        foreach ($request->image_path as $imag) {
-//
-//            Image::create([
-//                'image_path' => $imag,
-//                'product_id' => $product->id,
-//                'image_type' => $request->image_type,
-//            ]);
-//
-//        }
-
+      $this->product->store($request);
         return coustom_response(true, 'success add Product', []);
     }
 
@@ -110,9 +74,15 @@ class ProductController extends Controller
      * @param int $id
      * @return Response
      */
-    public function update(Request $request, $id)
+    public function update(ProductRequest $request, $id)
     {
-        //
+
+
+
+
+        return coustom_response(true, 'update add Product', []);
+
+
     }
 
     /**
@@ -122,7 +92,7 @@ class ProductController extends Controller
      */
     public function destroy($id)
     {
-        Product::findOrFail($id)->delete();
+      $this->product->destroy($id);
         return coustom_response(true, 'success delete Product',[], 200);
 
     }
