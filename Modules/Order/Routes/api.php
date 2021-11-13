@@ -24,3 +24,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::resource('orders','Api\OrderController');
     Route::get('how_many_orders','Api\OrderController@how_many_orders');
 });
+
+
+Route::middleware(['auth:sanctum','isAdmin'])->group(function () {
+    Route::get('AllOrder','Api\OrderController@AllOrder');
+});

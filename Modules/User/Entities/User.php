@@ -8,7 +8,9 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Str;
 use Laravel\Sanctum\HasApiTokens;
+use Laravel\Sanctum\NewAccessToken;
 use Modules\Order\Entities\Cart;
 use Modules\Order\Entities\order;
 
@@ -71,6 +73,25 @@ public function cart()
  {
      return $this->hasMany(order::class );
  }
+ public function deviceTokens(){
+        return $this->hasMany(DeviceToken::class);
+ }
+    public function routeNotificationForFcm()
+    {
+        return $this->deviceTokens()->pluck('token')->toArray();
+    }
+
+    public function createToken(string $name, $FcmToken, array $abilities = ['*'])
+    {
+        $token = $this->tokens()->create([
+            'name'      => $name,
+            'token'     => hash('sha256', $plainTextToken = Str::random(40)),
+            'abilities' => $abilities,
+            'FcmToken'   => $FcmToken,
+        ]);
+
+          return new NewAccessToken($token, $token->getKey().'|'.$plainTextToken);
+    }
 
 
 }

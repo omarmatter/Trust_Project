@@ -6,8 +6,13 @@ use App\Models\setting;
 use App\Serveices\General\ImageServeice;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\ServiceProvider;
+use Laravel\Sanctum\Sanctum;
 use Modules\Menu\Repository\ProductRepository;
 use Modules\Menu\Repository\ProductRepositoryInterface;
+use Modules\Order\Entities\order;
+use Modules\Order\Observers\OrderObserver;
+use Modules\User\Entities\PersonalAccessToken;
+use Modules\User\Serveices\FcmServeice\Fcm;
 use Modules\User\Serveices\SmsServeice\cequensSms;
 use Modules\User\Serveices\SmsServeice\smsInterface;
 
@@ -22,8 +27,10 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->bind('ImageServeice',ImageServeice::class);
         $this->app->bind('cequensSms',cequensSms::class);
+        $this->app->bind('FcmServeice', Fcm::class );
         $this->app->bind(ProductRepositoryInterface::class,ProductRepository::class);
 
+ Sanctum::usePersonalAccessTokenModel(PersonalAccessToken::class);
 
 //        $this->app->bind(smsInterface::class, function($app) {
 //
@@ -38,6 +45,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        order::observe(OrderObserver::class);
+
+
         $settings = Cache::get('app-settings');
         if (!$settings) {
 

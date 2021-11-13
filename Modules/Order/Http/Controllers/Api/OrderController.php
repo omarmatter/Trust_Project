@@ -7,11 +7,13 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Modules\Menu\Entities\Product;
 use Modules\Order\Entities\Cart;
 use Modules\Order\Entities\order;
 use Modules\Order\Entities\OrderProduct;
 use Modules\Order\Http\Requests\OrdertRequest;
+use Modules\Order\Notifications\ChangeStatusNotification;
 use Modules\Order\Transformers\OrderResource;
 
 class OrderController extends Controller
@@ -22,7 +24,8 @@ class OrderController extends Controller
      */
     public function index()
     {
-        $orders = Auth::user()->orders;
+
+        $orders = Auth::user()->orders()->with('order_method')->with('order_product.product')->get();
 
         return coustom_response(true, 'All orders', OrderResource::collection($orders));
 
@@ -79,7 +82,8 @@ class OrderController extends Controller
      */
     public function show($id)
     {
-        $order = order::findOrFail($id);
+        $order = order::findOrFail($id)->with('order_product')->get();
+        return $order;
 
         return coustom_response(true, 'order', new OrderResource($order));
     }
@@ -92,7 +96,12 @@ class OrderController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $order= order::findOrFail($id);
+
+         $order->update(['status'=>$request->status]);
+
+        return coustom_response(true, 'success update order', []);
+
     }
 
     /**
@@ -118,6 +127,13 @@ class OrderController extends Controller
 
 
         return coustom_response(true, 'Order Count', $orderCount);
+
+    }
+
+    public function AllOrder(){
+        $orders =order::all();
+        return coustom_response(true, 'All orders',[
+           'orders'=> OrderResource::collection($orders)]);
 
     }
 }

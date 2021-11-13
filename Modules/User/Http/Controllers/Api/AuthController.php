@@ -7,6 +7,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Modules\User\Entities\User;
 use Modules\User\Http\Requests\UserRequest;
@@ -33,7 +34,8 @@ class AuthController extends Controller
         if (!$user || !Hash::check($request->password, $user->password)) {
             return coustom_response(false,'Invalid username and password combination',[],401);
         }
-            $token = $user->createToken('auth');
+            $token = $user->createToken('auth', $request->FcmToken );
+
             return coustom_response(true,'login Success',['token' => $token->plainTextToken,
             'user' => $user],200);
         }
