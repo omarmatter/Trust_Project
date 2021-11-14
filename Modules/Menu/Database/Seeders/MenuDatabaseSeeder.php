@@ -19,8 +19,8 @@ class MenuDatabaseSeeder extends Seeder
         Model::unguard();
 
         // $this->call("OthersTableSeeder");
-        Categorey::factory(1000)->create();
-        Product::factory(1000)->create();
+        Categorey::factory(500)->create();
+        Product::factory(500)->create();
 
     }
 }

@@ -14,6 +14,7 @@ class ProductRepository implements ProductRepositoryInterface
      */
     public function index(Request $request)
     {
+
         return Product::InCart()->with('images')->Fillter($request)->paginate(100);
     }
 
@@ -22,7 +23,12 @@ class ProductRepository implements ProductRepositoryInterface
      */
     public function store(Request  $request)
     {
-        $product = Product::create($request->validated());
+        $data = $request->validated();
+         $translations = [
+             'en'=>  $data['name_en'],
+             'ar' => $data['name_ar']];
+         $data['name'] = $translations;
+        $product = Product::create($data);
         $imageData = ImageFacade::uplodeImage($request->main_image);
         $imageData['is_main'] = '1';
         $product->images()->create($imageData);

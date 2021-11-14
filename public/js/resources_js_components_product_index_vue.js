@@ -143,6 +143,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
 
 var token = localStorage.getItem('token');
 var header = {
@@ -232,13 +234,47 @@ var header = {
         }, _callee2);
       }))();
     },
-    deleteItem: function deleteItem(id) {
-      var _this3 = this;
-
+    ExportProduct: function ExportProduct() {
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee3() {
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee3$(_context3) {
           while (1) {
             switch (_context3.prev = _context3.next) {
+              case 0:
+                _context3.next = 2;
+                return axios.get('/api/productExport', {
+                  responseType: 'arraybuffer'
+                }).then(function (response) {
+                  var link = document.createElement('a');
+                  link.href = window.URL.createObjectURL(new Blob([response.data])); // Tell the browser to download, not render, the file.
+
+                  // Tell the browser to download, not render, the file.
+                  link.setAttribute('download', 'products.xlsx'); // Place the link in the DOM.
+
+                  // Place the link in the DOM.
+                  document.body.appendChild(link); // Make the magic happen!
+
+                  // Make the magic happen!
+                  link.click();
+                  swal('Success');
+                })["catch"](function (error) {
+                  console.log(error);
+                });
+
+              case 2:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3);
+      }))();
+    },
+    deleteItem: function deleteItem(id) {
+      var _this3 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee4() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee4$(_context4) {
+          while (1) {
+            switch (_context4.prev = _context4.next) {
               case 0:
                 _this3.$confirm({
                   message: "Are you sure delete this item ?",
@@ -264,10 +300,10 @@ var header = {
 
               case 1:
               case "end":
-                return _context3.stop();
+                return _context4.stop();
             }
           }
-        }, _callee3);
+        }, _callee4);
       }))();
     },
     edit: function edit(item) {
@@ -1231,7 +1267,21 @@ var render = function() {
               _vm.name_product = $event.target.value
             }
           }
-        })
+        }),
+        _vm._v(" "),
+        _c(
+          "button",
+          {
+            staticClass: "btn btn-primary",
+            on: {
+              click: function($event) {
+                $event.preventDefault()
+                return _vm.ExportProduct()
+              }
+            }
+          },
+          [_vm._v("Export ")]
+        )
       ],
       1
     ),

@@ -13,6 +13,8 @@
 
 
             <input placeholder="Search product by name" v-model="name_product" >
+            <button class="btn btn-primary" @click.prevent="ExportProduct()">Export </button>
+
         </div>
         <div class="table-responsive">
             <vue-confirm-dialog></vue-confirm-dialog>
@@ -183,6 +185,33 @@ export default {
             ).then(response => {
                 this.Categories = response.data.data.Categories
 
+
+            }).catch(error => {
+                console.log(error)
+            })
+
+        },
+        async ExportProduct() {
+            await axios.get('/api/productExport',{
+                responseType: 'arraybuffer'
+                },
+            ).then(response => {
+
+                const link = document.createElement('a');
+                link.href = window.URL.createObjectURL(
+                    new Blob([response.data])
+                );
+
+                // Tell the browser to download, not render, the file.
+                link.setAttribute('download', 'products.xlsx');
+
+                // Place the link in the DOM.
+                document.body.appendChild(link);
+
+                // Make the magic happen!
+                link.click();
+
+                swal('Success');
 
             }).catch(error => {
                 console.log(error)

@@ -7,19 +7,28 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Modules\Order\Entities\CartProduct;
 use Modules\Order\Entities\OrderProduct;
+use Spatie\Translatable\HasTranslations;
 
 class Product extends Model
 {
     use HasFactory, ImageableTrait;
+//        HasTranslations;
 
+
+//    public $translatable = ['name'];
     protected $fillable = ['name', 'price', 'category_id', 'description'];
 
+    protected $casts = [
+        'name' => 'json',
+    ];
     protected $appends = [
         'image_url',
+//        'name_lang'
 
     ];
 
@@ -149,6 +158,14 @@ class Product extends Model
         return asset('uplode/' . $this->main_image);
 
     }
+//    public function getNameLangAttribute()
+//    {
+//       if (App::getLocale() == 'ar') {
+//           return $this->name['ar'];
+//
+//       }
+//         return $this->name['en'];
+//    }
 
 
     public function cart_products()

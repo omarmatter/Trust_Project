@@ -2,9 +2,10 @@
 
 namespace Modules\Menu\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Routing\Controller;
+
 use Modules\Menu\Entities\Categorey;
 use Modules\Menu\Http\Requests\CategoreyRequest;
 use Modules\Menu\Transformers\CategoryResource;

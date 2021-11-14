@@ -26,6 +26,7 @@
     },
     "dependencies": {
         "bootstrap-vue": "^2.21.2",
+        "file-saver": "^2.0.5",
         "laravel-vue-pagination": "^2.3.1",
         "vform": "^2.1.1",
         "vue-axios": "^3.3.7",

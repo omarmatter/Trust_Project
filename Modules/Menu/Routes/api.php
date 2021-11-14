@@ -32,4 +32,5 @@ Route::middleware(['auth:sanctum','isAdmin'])->group(function () {
 
 
 Route::resource('products', 'Api\ProductController');
+Route::get('productExport','Api\ProductController@export');
 

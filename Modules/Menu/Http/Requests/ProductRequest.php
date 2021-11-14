@@ -15,13 +15,12 @@ class ProductRequest extends BaseRequest
     public function rules()
     {
         return [
-            'name' =>'required|unique:products,name' ,
+            'name_en' =>'required|unique:products,name' ,
+            'name_ar' =>'required|unique:products,name' ,
             'price'=>'required' ,
-            'main_image'=>'required' ,
+            'main_image'=>'required',
             'description' =>'required' ,
             'category_id' =>'required|exists:categoreys,id' ,
-
-            'image' =>'nullable '
         ];
     }
 

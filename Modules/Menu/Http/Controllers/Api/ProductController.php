@@ -4,20 +4,22 @@ namespace Modules\Menu\Http\Controllers\Api;
 
 use App\Facades\ImageFacade;
 use App\Facades\smsFacade;
+use App\Http\Controllers\Controller;
 use App\Serveices\General\ImageServeice;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Modules\Menu\Entities\Image;
 use Modules\Menu\Entities\Product;
+use Modules\Menu\Exports\ProductsExport;
 use Modules\Menu\Http\Requests\ProductRequest;
 use Modules\Menu\Repository\ProductRepositoryInterface;
 use Modules\Menu\Transformers\ProductCollection;
 use Modules\Menu\Transformers\ProductResource;
 use Modules\Order\Entities\CartProduct;
 use Modules\Order\Entities\OrderProduct;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ProductController extends Controller
 {
@@ -28,7 +30,7 @@ class ProductController extends Controller
 protected  $product;
     public function __construct(ProductRepositoryInterface $product)
     {
-        $this->middleware(['auth:sanctum','isAdmin'])->except('index');
+        $this->middleware(['auth:sanctum','isAdmin'])->except(['index','export']);
         $this->product=$product;
     }
 
@@ -37,7 +39,7 @@ protected  $product;
 
         $products= $this->product->index($request);
 
-        //        return $products;
+
          return coustom_response(true, 'All Product', [
             'products' => ProductResource::collection($products),
             'pagination' => $this->paginate($products)
@@ -97,24 +99,8 @@ protected  $product;
 
     }
 
-    public function fillter(Request $request)
+    public function export()
     {
-        $products = Product::with('category')->with('images')->Fillter($request);
-
-//        if ($request->category_id) {
-//            $products = $products->whereHas('category', function ($query) {
-//                $query->where('id', request('category_id'));
-//            });
-//        };
-//
-//        if ($request->from && $request->to) {
-//            $products = $products->where('price', '>=', $request->from)->where('price', '<', $request->to);
-//        };
-//        if ($request->name){
-//            $products = $products->where('name','=',$request->name);
-//        }
-        return coustom_response(true, 'Fillter Product', ProductResource::collection($products->get()), 200);
-
-
+        return Excel::download(new ProductsExport(), 'Products.xlsx');
     }
 }

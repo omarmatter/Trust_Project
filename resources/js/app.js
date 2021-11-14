@@ -3,7 +3,7 @@ import vue from 'vue'
 window.Vue = vue;
 
 import App from './components/App.vue';
-
+import { saveAs } from 'file-saver';
 //importamos Axios
 import VueAxios from 'vue-axios';
 import axios from 'axios';
