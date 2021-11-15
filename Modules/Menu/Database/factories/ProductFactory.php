@@ -27,7 +27,10 @@ class ProductFactory extends Factory
             ->limit(1)
             ->first(['id']);
         return [
-            'name' =>$this->faker->name,
+            'name' =>[
+                'en'=> $this->faker->name,
+                'ar' => 'عربي'
+            ],
             'price'=>$this->faker->numberBetween(50,200),
             'description'=>$this->faker->text ,
             'category_id'=>$category->id

@@ -16,11 +16,10 @@ use Spatie\Translatable\HasTranslations;
 
 class Product extends Model
 {
-    use HasFactory, ImageableTrait;
-//        HasTranslations;
+    use HasFactory, ImageableTrait, HasTranslations;
 
 
-//    public $translatable = ['name'];
+    public $translatable = ['name'];
     protected $fillable = ['name', 'price', 'category_id', 'description'];
 
     protected $casts = [
