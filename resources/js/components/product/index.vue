@@ -13,7 +13,7 @@
 
 
             <input placeholder="Search product by name" v-model="name_product" >
-            <button class="btn btn-primary" @click.prevent="ExportProduct()">Export </button>
+            <button class="btn btn-dark fright" @click.prevent="ExportProduct()">Export </button>
 
         </div>
         <div class="table-responsive">

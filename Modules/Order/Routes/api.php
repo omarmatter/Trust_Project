@@ -29,3 +29,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
 Route::middleware(['auth:sanctum','isAdmin'])->group(function () {
     Route::get('AllOrder','Api\OrderController@AllOrder');
 });
+Route::post('/RedirectionData/','Api\PayfortController@index');
+
+Route::get('/Process/{r}','Api\PayfortController@processResponse');

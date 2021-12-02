@@ -31,7 +31,8 @@ protected  $product;
     public function __construct(ProductRepositoryInterface $product)
     {
         $this->middleware(['auth:sanctum','isAdmin'])->except(['index','export']);
-        $this->product=$product;
+        $this->produ
+        =$product;
     }
 
     public function index(Request $request)
