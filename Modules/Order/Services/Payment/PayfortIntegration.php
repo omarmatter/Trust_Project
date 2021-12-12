@@ -29,6 +29,33 @@ class PayfortIntegration
      $this->SHAType =env('SHA_Type');
     }
 
+    public function Tokenization()
+    {
+        $merchantReference = $this->generateMerchantReference();
+
+
+        $iframeParams              = array(
+            'merchant_identifier' => $this->merchantIdentifier,
+            'access_code'         => $this->accessCode,
+            'merchant_reference'  => $merchantReference,
+            'service_command'     => 'TOKENIZATION',
+            'language'            => 'ar',
+            'return_url'          => 'url',
+        );
+
+        $iframeParams['signature'] = $this->calculateSignature($iframeParams, 'request');
+
+        if ($this->sandboxMode) {
+
+            $gatewayUrl = $this->gatewaySandboxHost . 'FortAPI/paymentPage';
+
+        }
+        else {
+            $gatewayUrl = $this->gatewayHost . 'FortAPI/paymentPage';
+        }
+        $this->callApi($iframeParams,$gatewayUrl);
+    }
+
     public function getRedirectionData(Request $request) {
         $merchantReference = $this->generateMerchantReference();
         if ($this->sandboxMode) {
